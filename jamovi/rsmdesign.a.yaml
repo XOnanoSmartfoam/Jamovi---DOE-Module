@@ -1,0 +1,152 @@
+---
+name: rsmdesign
+title: Response Surface Design
+menuGroup: DOE
+version: '1.0.0'
+jas: '1.2'
+completeWhenFilled: false
+
+options:
+    - name: data
+      type: Data
+
+    - name: factors
+      title: Factors
+      type: Array
+      default: []
+      template:
+          type: Group
+          elements:
+            - name: name
+              type: String
+              default: ''
+            - name: levels
+              type: String
+              default: '-1, 1'
+
+    - name: designType
+      title: Design type
+      type: List
+      options:
+        - title: Central Composite (CCD)
+          name: ccd
+        - title: Box-Behnken
+          name: bbd
+      default: ccd
+
+    - name: alpha
+      title: CCD alpha
+      type: List
+      options:
+        - title: Rotatable
+          name: rotatable
+        - title: Face-centered (alpha = 1)
+          name: faces
+      default: rotatable
+
+    - name: n0
+      title: Center points (cube / BBD)
+      type: Integer
+      min: 1
+      default: 3
+
+    - name: replicates
+      title: Replicates
+      type: Integer
+      min: 1
+      default: 1
+
+    - name: randomize
+      title: Randomize run order
+      type: Bool
+      default: true
+
+    - name: seed
+      title: Random seed
+      type: Integer
+      default: 1
+
+    - name: responses
+      title: Responses
+      type: Array
+      default: []
+      template:
+          type: Group
+          elements:
+            - name: name
+              type: String
+              default: ''
+            - name: goal
+              type: List
+              options:
+                - title: Maximize
+                  name: maximize
+                - title: Minimize
+                  name: minimize
+                - title: Match target
+                  name: match
+              default: maximize
+            - name: target
+              title: Target
+              type: Number
+              default: 0
+
+    - name: responseTarget
+      title: Target value
+      type: Number
+      default: 0
+      hidden: true
+
+
+    - name: simulateResponses
+      title: Fill responses with random data
+      type: Bool
+      default: true
+
+    - name: evaluateDesign
+      title: Evaluate this design
+      type: Bool
+      default: false
+
+    - name: analysisModel
+      title: Analysis model
+      type: List
+      options:
+        - title: Main effects
+          name: main
+        - title: Main + 2-factor interactions
+          name: main2fi
+        - title: Response surface (quadratic)
+          name: rsm
+      default: rsm
+
+    - name: halfNormal
+      title: Half-normal plot
+      type: Bool
+      default: true
+
+    - name: pareto
+      title: Pareto plot of |effects|
+      type: Bool
+      default: true
+
+    - name: mainEffects
+      title: Main effects plot
+      type: Bool
+      default: false
+
+    - name: interaction
+      title: Interaction plot
+      type: Bool
+      default: false
+
+    - name: residuals
+      title: Residual plots
+      type: Bool
+      default: true
+
+    - name: contour
+      title: Contour plot (first two continuous factors)
+      type: Bool
+      default: true
+...

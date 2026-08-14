@@ -1,0 +1,27 @@
+Package: jmvdoe
+Type: Package
+Title: Design of Experiments for jamovi
+Version: 0.1.10
+Authors@R: person("DOE", "Module", role = c("aut", "cre"),
+                  email = "doe@example.com")
+Author: DOE Module
+Maintainer: DOE Module <doe@example.com>
+Description: JMP-inspired design of experiments tools for jamovi.
+    Generate full factorial, screening, response surface, custom optimal,
+    and Taguchi designs, and evaluate them in the same analysis including
+    Taguchi signal-to-noise ratios.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Imports:
+    jmvcore (>= 0.8.5),
+    R6,
+    DoE.base,
+    FrF2,
+    rsm,
+    AlgDesign,
+    ggplot2,
+    grid
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

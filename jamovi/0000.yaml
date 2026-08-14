@@ -1,0 +1,49 @@
+---
+title: DOE
+name: jmvdoe
+version: 0.1.10
+jms: '1.0'
+authors:
+  - DOE Module
+maintainer: DOE Module <doe@example.com>
+date: '2026-08-13'
+type: R
+description: >-
+  JMP-inspired design of experiments for jamovi. Generate full factorial,
+  screening, response surface, custom optimal, and Taguchi designs, and evaluate
+  them in the same analysis including Taguchi signal-to-noise ratios.
+analyses:
+  - title: Full Factorial Design
+    name: fullfactorial
+    ns: jmvdoe
+    category: analyses
+    menuGroup: DOE
+    menuTitle: Full Factorial Design
+  - title: Screening Design
+    name: screening
+    ns: jmvdoe
+    category: analyses
+    menuGroup: DOE
+    menuTitle: Screening Design
+  - title: Response Surface Design
+    name: rsmdesign
+    ns: jmvdoe
+    category: analyses
+    menuGroup: DOE
+    menuTitle: Response Surface Design
+  - title: Custom Design
+    name: customdesign
+    ns: jmvdoe
+    category: analyses
+    menuGroup: DOE
+    menuTitle: Custom Design
+  - title: Taguchi Arrays
+    name: taguchiarrays
+    ns: jmvdoe
+    category: analyses
+    menuGroup: DOE
+    menuTitle: Taguchi Arrays
+usesNative: true
+minApp: 1.0.8
+
+...

@@ -1,0 +1,171 @@
+    - name: analysisInfo
+      title: Model Summary
+      type: Html
+      visible: (evaluateDesign)
+      clearWith:
+        - evaluateDesign
+        - analysisModel
+        - factors
+        - replicates
+        - seed
+        - nResponses
+        - simulateResponses
+
+    - name: analysisAnova
+      title: ANOVA
+      type: Table
+      visible: (evaluateDesign)
+      clearWith:
+        - evaluateDesign
+        - analysisModel
+        - factors
+        - replicates
+        - seed
+        - nResponses
+        - simulateResponses
+      columns:
+        - name: term
+          title: Term
+          type: text
+        - name: ss
+          title: Sum of Squares
+          type: number
+        - name: df
+          title: df
+          type: integer
+        - name: ms
+          title: Mean Square
+          type: number
+        - name: F
+          title: F
+          type: number
+        - name: p
+          title: p
+          type: number
+          format: zto,pvalue
+
+    - name: analysisCoef
+      title: Coefficients
+      type: Table
+      visible: (evaluateDesign)
+      clearWith:
+        - evaluateDesign
+        - analysisModel
+        - factors
+        - replicates
+        - seed
+        - nResponses
+        - simulateResponses
+      columns:
+        - name: term
+          title: Term
+          type: text
+        - name: estimate
+          title: Estimate
+          type: number
+        - name: se
+          title: SE
+          type: number
+        - name: t
+          title: t
+          type: number
+        - name: p
+          title: p
+          type: number
+          format: zto,pvalue
+
+    - name: analysisHalfNormal
+      title: Half-Normal Plot
+      type: Image
+      width: 450
+      height: 400
+      renderFun: .plotHalfNormal
+      visible: (evaluateDesign && halfNormal)
+      clearWith:
+        - evaluateDesign
+        - analysisModel
+        - factors
+        - replicates
+        - seed
+        - nResponses
+        - simulateResponses
+
+    - name: analysisPareto
+      title: Pareto Plot
+      type: Image
+      width: 450
+      height: 400
+      renderFun: .plotPareto
+      visible: (evaluateDesign && pareto)
+      clearWith:
+        - evaluateDesign
+        - analysisModel
+        - factors
+        - replicates
+        - seed
+        - nResponses
+        - simulateResponses
+
+    - name: analysisMainEffects
+      title: Main Effects Plot
+      type: Image
+      width: 500
+      height: 400
+      renderFun: .plotMainEffects
+      visible: (evaluateDesign && mainEffects)
+      clearWith:
+        - evaluateDesign
+        - analysisModel
+        - factors
+        - replicates
+        - seed
+        - nResponses
+        - simulateResponses
+
+    - name: analysisInteraction
+      title: Interaction Plot
+      type: Image
+      width: 450
+      height: 400
+      renderFun: .plotInteraction
+      visible: (evaluateDesign && interaction)
+      clearWith:
+        - evaluateDesign
+        - analysisModel
+        - factors
+        - replicates
+        - seed
+        - nResponses
+        - simulateResponses
+
+    - name: analysisResiduals
+      title: Residual Plots
+      type: Image
+      width: 500
+      height: 400
+      renderFun: .plotResiduals
+      visible: (evaluateDesign && residuals)
+      clearWith:
+        - evaluateDesign
+        - analysisModel
+        - factors
+        - replicates
+        - seed
+        - nResponses
+        - simulateResponses
+
+    - name: analysisContour
+      title: Contour Plot
+      type: Image
+      width: 450
+      height: 400
+      renderFun: .plotContour
+      visible: (evaluateDesign && contour)
+      clearWith:
+        - evaluateDesign
+        - analysisModel
+        - factors
+        - replicates
+        - seed
+        - nResponses
+        - simulateResponses

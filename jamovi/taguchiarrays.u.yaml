@@ -1,0 +1,165 @@
+title: Taguchi Arrays
+name: taguchiarrays
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: CollapseBox
+    label: Orthogonal array
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: ComboBox
+            name: arrayId
+  - type: CollapseBox
+    label: Control factors
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: ListBox
+        name: factors
+        height: large
+        showColumnHeaders: true
+        addButton: Add factor
+        stretchFactor: 1
+        columns:
+          - name: name
+            label: Name
+            stretchFactor: 1
+            template:
+              type: TextBox
+              format: string
+          - name: levels
+            label: Levels (comma-separated)
+            stretchFactor: 2
+            template:
+              type: TextBox
+              format: string
+  - type: CollapseBox
+    label: Responses
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: ListBox
+        name: responses
+        height: large
+        showColumnHeaders: true
+        addButton: Add response
+        stretchFactor: 1
+        columns:
+          - name: name
+            label: Name
+            stretchFactor: 1
+            template:
+              type: TextBox
+              format: string
+          - name: goal
+            label: Goal
+            stretchFactor: 1
+            template:
+              type: ComboBox
+          - name: target
+            label: Target
+            stretchFactor: 1
+            template:
+              type: TextBox
+              format: number
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: CheckBox
+            name: simulateResponses
+  - type: CollapseBox
+    label: Noise factors (outer array)
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: CheckBox
+            name: useOuter
+      - type: ListBox
+        name: noiseFactors
+        height: large
+        showColumnHeaders: true
+        addButton: Add noise factor
+        stretchFactor: 1
+        columns:
+          - name: name
+            label: Name
+            stretchFactor: 1
+            template:
+              type: TextBox
+              format: string
+          - name: levels
+            label: Levels (comma-separated)
+            stretchFactor: 2
+            template:
+              type: TextBox
+              format: string
+      - type: CollapseBox
+        label: About the outer array
+        collapsed: true
+        stretchFactor: 1
+        children:
+          - type: LayoutBox
+            margin: small
+            stretchFactor: 1
+            children:
+              - type: Label
+                stretchFactor: 1
+                label: 'Noise factors are conditions you cannot control in production (humidity, lot, operator, ambient temperature). Vary them in the lab to find control settings that stay on target when those change.'
+              - type: Label
+                stretchFactor: 1
+                label: 'Check Include outer / noise array to use this list. Add each noise factor by name and levels (usually Low, High).'
+              - type: Label
+                stretchFactor: 1
+                label: 'The inner array is control recipes (rows). The outer array does not add more rows. It adds Y columns so each inner run is measured at every noise combination.'
+              - type: Label
+                stretchFactor: 1
+                label: 'SN analysis uses those Y columns. Maximize / Minimize / Match target pick larger-, smaller-, or nominal-the-best SN. Skip this section to screen controls only.'
+              - type: Label
+                stretchFactor: 1
+                label: 'Replicates repeat the whole design under the same conditions; that is not the same as noise factors.'
+  - type: CollapseBox
+    label: Runs
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: TextBox
+            name: replicates
+            format: number
+          - type: CheckBox
+            name: randomize
+          - type: TextBox
+            name: seed
+            format: number
+            enable: (randomize)
+          - type: Label
+            label: 'Each extra copy stacks the whole design (Run 1.1, 1.2, …). The Design Table in the results updates as you change settings. Copy that table if you need the runs in a spreadsheet.'
+  - type: CollapseBox
+    label: Evaluate
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: CheckBox
+            name: evaluateDesign
+          - type: CheckBox
+            name: snModel
+            enable: (evaluateDesign)
+          - type: CheckBox
+            name: plotSN
+            enable: (evaluateDesign)
+          - type: CheckBox
+            name: plotMeans
+            enable: (evaluateDesign)

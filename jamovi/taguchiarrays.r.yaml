@@ -1,0 +1,218 @@
+---
+name: taguchiarrays
+title: Taguchi Arrays
+jrs: '1.1'
+
+items:
+    - name: info
+      title: Design Summary
+      type: Html
+      clearWith:
+        - arrayId
+        - factors
+        - useOuter
+        - noiseFactors
+        - randomize
+        - seed
+        - replicates
+        - responses
+        - responseTarget
+        - simulateResponses
+
+    - name: design
+      title: Design Table
+      type: Table
+      clearWith:
+        - arrayId
+        - factors
+        - useOuter
+        - noiseFactors
+        - randomize
+        - seed
+        - replicates
+        - responses
+        - responseTarget
+        - simulateResponses
+      columns:
+        - name: Run
+          title: Run
+          type: text
+
+    - name: analysisInfo
+      title: Taguchi Summary
+      type: Html
+      visible: (evaluateDesign)
+      clearWith:
+        - evaluateDesign
+        - snType
+        - factors
+        - replicates
+        - seed
+        - responses
+        - responseTarget
+        - simulateResponses
+        - useOuter
+        - noiseFactors
+
+
+    - name: analysisRecommend
+      title: Preferred settings
+      type: Table
+      visible: (evaluateDesign)
+      clearWith:
+        - evaluateDesign
+        - snType
+        - factors
+        - replicates
+        - seed
+        - responses
+        - responseTarget
+        - simulateResponses
+        - useOuter
+        - noiseFactors
+      columns:
+        - name: response
+          title: Response
+          type: text
+        - name: goal
+          title: Goal
+          type: text
+        - name: factor
+          title: Factor
+          type: text
+        - name: level
+          title: Preferred level
+          type: text
+        - name: mean
+          title: Mean
+          type: number
+    - name: analysisPerRun
+      title: Per-run SN and Mean
+      type: Table
+      visible: (evaluateDesign)
+      clearWith:
+        - evaluateDesign
+        - snType
+        - factors
+        - replicates
+        - seed
+        - responses
+        - responseTarget
+        - simulateResponses
+        - useOuter
+        - noiseFactors
+      columns:
+        - name: run
+          title: Run
+          type: integer
+        - name: mean
+          title: Mean
+          type: number
+        - name: sn
+          title: SN
+          type: number
+
+    - name: analysisResponseSN
+      title: Response Table (SN)
+      type: Table
+      visible: (evaluateDesign)
+      clearWith:
+        - evaluateDesign
+        - snType
+        - factors
+        - replicates
+        - seed
+        - responses
+        - responseTarget
+        - simulateResponses
+        - useOuter
+        - noiseFactors
+      columns:
+        - name: factor
+          title: Factor
+          type: text
+        - name: level
+          title: Level
+          type: text
+        - name: meanSN
+          title: Mean SN
+          type: number
+
+    - name: analysisResponseMean
+      title: Response Table (Means)
+      type: Table
+      visible: (evaluateDesign)
+      clearWith:
+        - evaluateDesign
+        - snType
+        - factors
+        - replicates
+        - seed
+        - responses
+        - responseTarget
+        - simulateResponses
+        - useOuter
+        - noiseFactors
+      columns:
+        - name: factor
+          title: Factor
+          type: text
+        - name: level
+          title: Level
+          type: text
+        - name: meanY
+          title: Mean Response
+          type: number
+
+    - name: analysisSnAnova
+      title: ANOVA on SN
+      type: Table
+      visible: (evaluateDesign && snModel)
+      clearWith:
+        - evaluateDesign
+        - snType
+        - snModel
+        - factors
+        - replicates
+        - seed
+        - responses
+        - responseTarget
+        - simulateResponses
+        - useOuter
+        - noiseFactors
+      columns:
+        - name: term
+          title: Term
+          type: text
+        - name: ss
+          title: Sum of Squares
+          type: number
+        - name: df
+          title: df
+          type: integer
+        - name: ms
+          title: Mean Square
+          type: number
+        - name: F
+          title: F
+          type: number
+        - name: p
+          title: p
+          type: number
+          format: zto,pvalue
+
+    - name: analysisPlotSN
+      title: SN Main Effects
+      type: Image
+      width: 500
+      height: 400
+      renderFun: .plotSN
+      visible: (evaluateDesign && plotSN)
+
+    - name: analysisPlotMeans
+      title: Means Main Effects
+      type: Image
+      width: 500
+      height: 400
+      renderFun: .plotMeans
+      visible: (evaluateDesign && plotMeans)

@@ -1,0 +1,121 @@
+title: Full Factorial Design
+name: fullfactorial
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: CollapseBox
+    label: Factors
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: ListBox
+        name: factors
+        height: large
+        showColumnHeaders: true
+        addButton: Add factor
+        stretchFactor: 1
+        columns:
+          - name: name
+            label: Name
+            stretchFactor: 1
+            template:
+              type: TextBox
+              format: string
+          - name: levels
+            label: Levels (comma-separated)
+            stretchFactor: 2
+            template:
+              type: TextBox
+              format: string
+  - type: CollapseBox
+    label: Responses
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: ListBox
+        name: responses
+        height: large
+        showColumnHeaders: true
+        addButton: Add response
+        stretchFactor: 1
+        columns:
+          - name: name
+            label: Name
+            stretchFactor: 1
+            template:
+              type: TextBox
+              format: string
+          - name: goal
+            label: Goal
+            stretchFactor: 1
+            template:
+              type: ComboBox
+          - name: target
+            label: Target
+            stretchFactor: 1
+            template:
+              type: TextBox
+              format: number
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: CheckBox
+            name: simulateResponses
+  - type: CollapseBox
+    label: Runs
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: TextBox
+            name: replicates
+            format: number
+          - type: CheckBox
+            name: randomize
+          - type: TextBox
+            name: seed
+            format: number
+            enable: (randomize)
+          - type: Label
+            label: 'Each extra copy stacks the whole design (Run 1.1, 1.2, …). The Design Table in the results updates as you change settings. Copy that table if you need the runs in a spreadsheet.'
+  - type: CollapseBox
+    label: Evaluate
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: CheckBox
+            name: evaluateDesign
+          - type: ComboBox
+            name: analysisModel
+            enable: (evaluateDesign)
+      - type: CollapseBox
+        label: Evaluation plots
+        collapsed: true
+        children:
+          - type: LayoutBox
+            margin: large
+            children:
+              - type: CheckBox
+                name: halfNormal
+                enable: (evaluateDesign)
+              - type: CheckBox
+                name: pareto
+                enable: (evaluateDesign)
+              - type: CheckBox
+                name: mainEffects
+                enable: (evaluateDesign)
+              - type: CheckBox
+                name: interaction
+                enable: (evaluateDesign)
+              - type: CheckBox
+                name: residuals
+                enable: (evaluateDesign)
+              - type: CheckBox
+                name: contour
+                enable: (evaluateDesign)
