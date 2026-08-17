@@ -430,14 +430,26 @@
     )
 }
 
+#' Treat jamovi Action / Output / Bool values as a simple on/off flag.
+.doe_opt_on <- function(x) {
+    if (isTRUE(x))
+        return(TRUE)
+    if (is.list(x) && !is.null(x$value) && isTRUE(x$value))
+        return(TRUE)
+    FALSE
+}
+
 #' Send the design to the spreadsheet, but only when the user asked for it.
 #'
 #' Touching the Output makes jamovi rewrite the analysis options server side,
 #' which desynchronises the options panel and freezes every later edit. Writing
-#' only on an explicit request keeps design iteration free of that round trip.
+#' only when the Add design to spreadsheet button is clicked keeps design
+#' iteration free of that round trip.
 .doe_try_write_design <- function(self, factor_df, response_df, seed) {
-    if (!isTRUE(self$options$designOutput))
+    action <- .doe_opt_on(tryCatch(self$options$addToSpreadsheet, error = function(e) FALSE))
+    if (!action)
         return(list(ok = FALSE, disabled = TRUE))
+
     tryCatch(
         .doe_write_to_spreadsheet(
             self$results$designOutput,
@@ -449,6 +461,19 @@
         ),
         error = function(e) list(ok = FALSE, error = conditionMessage(e))
     )
+}
+
+#' Show the design in results and optionally write it to the spreadsheet.
+.doe_present_design <- function(self, header_html, df, fac_df, resp_df, seed) {
+    n_y <- if (is.null(resp_df)) 0L else ncol(resp_df)
+    write_res <- .doe_try_write_design(self, fac_df, resp_df, seed)
+    self$results$info$setContent(paste0(
+        header_html,
+        .doe_write_tip(write_res, n_y, isTRUE(self$options$simulateResponses)),
+        .doe_html_design(df)
+    ))
+    .doe_fill_table(self$results$design, df)
+    invisible(write_res)
 }
 
 #' Columns to send through jamovi's Output API (Run, factors, responses).
@@ -608,7 +633,7 @@
 .doe_preview_tip <- function() {
     paste0(
         "<p>The Design Table below updates as you change factors, responses and ",
-        "replicates. Copy it from the results if you need the runs in a spreadsheet.</p>"
+        "replicates. Click <b>Add design to spreadsheet</b> when you want the runs in Data.</p>"
     )
 }
 
@@ -618,8 +643,7 @@
             "<p>This is a <b>preview</b>. The design below updates as you change ",
             "factors, responses and replicates, and nothing has been written to the ",
             "<b>Data</b> spreadsheet yet.</p>",
-            "<p>When the design is final, open <b>Send to spreadsheet</b> and check ",
-            "<b>Send this design to the spreadsheet</b>.</p>"
+            "<p>When the design is final, click <b>Add design to spreadsheet</b>.</p>"
         ))
     }
     if (isTRUE(write_res$ok)) {
@@ -638,8 +662,8 @@
             sim_note,
             " If you see <code>A (2)</code> instead of <code>A</code>, delete jamovi's empty starter columns ",
             "(right-click A, B, C → Delete) and send the design again.</p>",
-            "<p>Uncheck <b>Send this design to the spreadsheet</b> before you edit the design ",
-            "further, then check it again when you are done. ",
+            "<p>Click <b>Add design to spreadsheet</b> again after you change the design. ",
+            "Uncheck <b>Columns in Data</b> to remove the generated columns. ",
             "Check <b>Evaluate this design</b> to analyze these runs here.</p>"
         ))
     }
@@ -696,7 +720,7 @@
 #' Instructions note for jamovi design generators.
 .doe_copy_instructions <- function() {
     paste(
-        "Check Send this design to the spreadsheet to write these runs to Data.",
+        "Click Add design to spreadsheet to write these runs to Data.",
         "Delete jamovi's empty A, B, C columns first if you want those names reused.",
         "Check Evaluate this design to analyze these runs in this same results panel."
     )

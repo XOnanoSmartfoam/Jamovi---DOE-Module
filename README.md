@@ -22,12 +22,9 @@ Each generator includes **Evaluate this design** (ANOVA / Taguchi SN, plots, pre
 4. Add **Responses** (name + Maximize, Minimize, or Match target). Each named column is created in the design.
 5. Leave **Fill responses with random data** checked to pre-populate demo values (with planted factor effects so analysis plots look meaningful).
 6. Check **Evaluate this design** to fit the model. Preferred factor levels follow each response’s goal.
-7. Optionally check **Add design to spreadsheet** if you want the runs in Data.
+7. Click **Add design to spreadsheet** when you want the runs in Data. That writes Run, factor, and response columns into the current spreadsheet.
 
-**Note:** jamovi cannot create a brand-new separate data table like JMP’s *Make Table*. Spreadsheet write-back adds columns to the current sheet; use a fresh file so existing data is not mixed with the design.
-
-
-**Note:** jamovi cannot create a brand-new separate data table like JMP’s *Make Table*. Spreadsheet write-back adds columns to the current sheet; use a fresh file so existing data is not mixed with the design.
+**Note:** jamovi cannot create a brand-new separate data table like JMP’s *Make Table*. Spreadsheet write-back adds columns to the current sheet; use a fresh file so existing data is not mixed with the design. Uncheck **Columns in Data** to remove the generated columns. Click the button again after you change the design.
 
 ## Install (developers)
 

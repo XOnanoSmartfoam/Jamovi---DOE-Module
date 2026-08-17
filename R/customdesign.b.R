@@ -75,15 +75,16 @@ customdesignClass <- if (requireNamespace('jmvcore', quietly = TRUE)) R6::R6Clas
                 if (!is.null(opt$I)) sprintf("I-criterion: %.4f", opt$I) else ""
             }, error = function(e) "")
 
-            self$results$info$setContent(paste0(
-                "<p><b>Custom ", criterion, "-optimal design</b> for a ", model,
-                " model with ", nrow(factors), " factors. ",
-                .doe_runs_sentence(nrow(df), reps),
-                " Requested ", nruns, " base runs.</p>",
-                .doe_preview_tip(),
-                .doe_html_design(df)
-            ))
-            .doe_fill_table(self$results$design, df)
+            .doe_present_design(
+                self,
+                paste0(
+                    "<p><b>Custom ", criterion, "-optimal design</b> for a ", model,
+                    " model with ", nrow(factors), " factors. ",
+                    .doe_runs_sentence(nrow(df), reps),
+                    " Requested ", nruns, " base runs.</p>"
+                ),
+                df, fac_df, resp_df, seed
+            )
             self$results$efficiency$setContent(paste(c(deff, ieff), collapse = "\n"))
             .doe_maybe_evaluate_lm(
                 self, fac_df, resp_df, factors$name, self$options$model,

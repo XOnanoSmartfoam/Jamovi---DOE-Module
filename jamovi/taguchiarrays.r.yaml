@@ -216,3 +216,8 @@ items:
       height: 400
       renderFun: .plotMeans
       visible: (evaluateDesign && plotMeans)
+
+    - name: designOutput
+      title: Spreadsheet columns
+      type: Output
+      initInRun: true

@@ -69,13 +69,14 @@ rsmdesignClass <- if (requireNamespace('jmvcore', quietly = TRUE)) R6::R6Class(
                 actual_out <- cbind(actual_out, resp_df, stringsAsFactors = FALSE)
             coded_out <- coded_df
 
-            self$results$info$setContent(paste0(
-                "<p><b>Response surface design</b> (", toupper(dtype), ") with ",
-                k, " factors. ", .doe_runs_sentence(nrow(actual_out), reps), "</p>",
-                .doe_preview_tip(),
-                .doe_html_design(actual_out)
-            ))
-            .doe_fill_table(self$results$design, actual_out)
+            .doe_present_design(
+                self,
+                paste0(
+                    "<p><b>Response surface design</b> (", toupper(dtype), ") with ",
+                    k, " factors. ", .doe_runs_sentence(nrow(actual_out), reps), "</p>"
+                ),
+                actual_out, actual_df, resp_df, seed
+            )
             .doe_fill_table(self$results$coded, coded_out)
             .doe_maybe_evaluate_lm(
                 self, actual_df, resp_df, fac$name, self$options$analysisModel,

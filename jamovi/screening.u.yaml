@@ -88,7 +88,22 @@ children:
             format: number
             enable: (randomize)
           - type: Label
-            label: 'Each extra copy stacks the whole design (Run 1.1, 1.2, …). The Design Table in the results updates as you change settings. Copy that table if you need the runs in a spreadsheet.'
+            label: 'Each extra copy stacks the whole design (Run 1.1, 1.2, …). The Design Table updates as you change settings. Click Add design to spreadsheet when you want the runs in Data.'
+  - type: CollapseBox
+    label: Spreadsheet
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: ActionButton
+            name: addToSpreadsheet
+            label: Add design to spreadsheet
+          - type: Output
+            name: designOutput
+          - type: Label
+            label: 'Writes Run, factor, and response columns into the Data spreadsheet. Use a new/empty file so existing columns are not mixed with the design.'
   - type: CollapseBox
     label: Evaluate
     collapsed: false

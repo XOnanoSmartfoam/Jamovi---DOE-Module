@@ -147,4 +147,12 @@ options:
       title: Contour plot (first two continuous factors)
       type: Bool
       default: false
+
+    - name: addToSpreadsheet
+      title: Add design to spreadsheet
+      type: Action
+
+    - name: designOutput
+      title: Columns in Data
+      type: Output
 ...

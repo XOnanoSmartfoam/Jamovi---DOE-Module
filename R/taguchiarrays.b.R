@@ -76,15 +76,16 @@ taguchiarraysClass <- if (requireNamespace('jmvcore', quietly = TRUE)) R6::R6Cla
             lab <- cat$label[match(array_id, cat$id)]
             if (is.na(lab)) lab <- array_id
 
-            self$results$info$setContent(paste0(
-                note_array,
-                "<p><b>Taguchi array</b>: ", lab, " with ", nrow(factors),
-                " control factor(s). ", .doe_runs_sentence(nrow(out), reps),
-                note_outer, "</p>",
-                .doe_preview_tip(),
-                .doe_html_design(out)
-            ))
-            .doe_fill_table(self$results$design, out)
+            .doe_present_design(
+                self,
+                paste0(
+                    note_array,
+                    "<p><b>Taguchi array</b>: ", lab, " with ", nrow(factors),
+                    " control factor(s). ", .doe_runs_sentence(nrow(out), reps),
+                    note_outer, "</p>"
+                ),
+                out, factor_df, response_df, seed
+            )
             .doe_maybe_evaluate_taguchi(
                 self, factor_df, response_df, factors$name, resp_info = resp_info
             )

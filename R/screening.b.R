@@ -78,14 +78,15 @@ screeningClass <- if (requireNamespace('jmvcore', quietly = TRUE)) R6::R6Class(
                 }
             }, error = function(e) "unknown")
 
-            self$results$info$setContent(paste0(
-                "<p><b>Screening design</b> (", dtype, ") with ", nfac,
-                " factors. ", .doe_runs_sentence(nrow(df), reps),
-                " Requested base size ", nruns, ". Resolution: ", res_txt, ".</p>",
-                .doe_preview_tip(),
-                .doe_html_design(df)
-            ))
-            .doe_fill_table(self$results$design, df)
+            .doe_present_design(
+                self,
+                paste0(
+                    "<p><b>Screening design</b> (", dtype, ") with ", nfac,
+                    " factors. ", .doe_runs_sentence(nrow(df), reps),
+                    " Requested base size ", nruns, ". Resolution: ", res_txt, ".</p>"
+                ),
+                df, fac_df, resp_df, seed
+            )
 
             alias_txt <- if (identical(dtype, "frf2")) {
                 .doe_alias_text(des)

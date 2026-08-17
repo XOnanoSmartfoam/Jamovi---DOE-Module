@@ -23,7 +23,8 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             mainEffects = FALSE,
             interaction = FALSE,
             residuals = TRUE,
-            contour = FALSE, ...) {
+            contour = FALSE,
+            addToSpreadsheet = FALSE, ...) {
 
             super$initialize(
                 package="jmvdoe",
@@ -146,6 +147,11 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "contour",
                 contour,
                 default=FALSE)
+            private$..addToSpreadsheet <- jmvcore::OptionAction$new(
+                "addToSpreadsheet",
+                addToSpreadsheet)
+            private$..designOutput <- jmvcore::OptionOutput$new(
+                "designOutput")
 
             self$.addOption(private$..factors)
             self$.addOption(private$..designType)
@@ -165,6 +171,8 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..interaction)
             self$.addOption(private$..residuals)
             self$.addOption(private$..contour)
+            self$.addOption(private$..addToSpreadsheet)
+            self$.addOption(private$..designOutput)
         }),
     active = list(
         factors = function() private$..factors$value,
@@ -184,7 +192,9 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         mainEffects = function() private$..mainEffects$value,
         interaction = function() private$..interaction$value,
         residuals = function() private$..residuals$value,
-        contour = function() private$..contour$value),
+        contour = function() private$..contour$value,
+        addToSpreadsheet = function() private$..addToSpreadsheet$value,
+        designOutput = function() private$..designOutput$value),
     private = list(
         ..factors = NA,
         ..designType = NA,
@@ -203,7 +213,9 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..mainEffects = NA,
         ..interaction = NA,
         ..residuals = NA,
-        ..contour = NA)
+        ..contour = NA,
+        ..addToSpreadsheet = NA,
+        ..designOutput = NA)
 )
 
 screeningResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -222,7 +234,8 @@ screeningResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         analysisMainEffects = function() private$.items[["analysisMainEffects"]],
         analysisInteraction = function() private$.items[["analysisInteraction"]],
         analysisResiduals = function() private$.items[["analysisResiduals"]],
-        analysisContour = function() private$.items[["analysisContour"]]),
+        analysisContour = function() private$.items[["analysisContour"]],
+        designOutput = function() private$.items[["designOutput"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -509,7 +522,12 @@ screeningResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "seed",
                     "responses",
                     "responseTarget",
-                    "simulateResponses")))}))
+                    "simulateResponses")))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="designOutput",
+                title="Spreadsheet columns",
+                initInRun=TRUE))}))
 
 screeningBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "screeningBase",
@@ -529,7 +547,7 @@ screeningBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 pause = NULL,
                 completeWhenFilled = FALSE,
                 requiresMissings = FALSE,
-                weightsSupport = 'auto')
+                weightsSupport = 'none')
         }))
 
 #' Screening Design
@@ -554,6 +572,7 @@ screeningBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param interaction .
 #' @param residuals .
 #' @param contour .
+#' @param addToSpreadsheet .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$info} \tab \tab \tab \tab \tab a html \cr
@@ -569,6 +588,7 @@ screeningBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$analysisInteraction} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$analysisResiduals} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$analysisContour} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$designOutput} \tab \tab \tab \tab \tab an output \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -597,7 +617,8 @@ screening <- function(
     mainEffects = FALSE,
     interaction = FALSE,
     residuals = TRUE,
-    contour = FALSE) {
+    contour = FALSE,
+    addToSpreadsheet = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("screening requires jmvcore to be installed (restart may be required)")
@@ -625,7 +646,8 @@ screening <- function(
         mainEffects = mainEffects,
         interaction = interaction,
         residuals = residuals,
-        contour = contour)
+        contour = contour,
+        addToSpreadsheet = addToSpreadsheet)
 
     analysis <- screeningClass$new(
         options = options,

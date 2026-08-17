@@ -52,13 +52,14 @@ fullfactorialClass <- if (requireNamespace('jmvcore', quietly = TRUE)) R6::R6Cla
             if (!is.null(resp_df))
                 df <- cbind(df, resp_df, stringsAsFactors = FALSE)
 
-            self$results$info$setContent(paste0(
-                "<p><b>Full factorial</b> with ", nrow(factors), " factors. ",
-                .doe_runs_sentence(nrow(df), reps), "</p>",
-                .doe_preview_tip(),
-                .doe_html_design(df)
-            ))
-            .doe_fill_table(self$results$design, df)
+            .doe_present_design(
+                self,
+                paste0(
+                    "<p><b>Full factorial</b> with ", nrow(factors), " factors. ",
+                    .doe_runs_sentence(nrow(df), reps), "</p>"
+                ),
+                df, fac_df, resp_df, seed
+            )
             .doe_maybe_evaluate_lm(
                 self, fac_df, resp_df, factors$name, self$options$analysisModel,
                 resp_info = resp_info

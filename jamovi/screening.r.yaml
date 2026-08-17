@@ -264,3 +264,8 @@ items:
         - responses
         - responseTarget
         - simulateResponses
+
+    - name: designOutput
+      title: Spreadsheet columns
+      type: Output
+      initInRun: true

@@ -20,7 +20,8 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
             snType = "smaller",
             snModel = TRUE,
             plotSN = TRUE,
-            plotMeans = TRUE, ...) {
+            plotMeans = TRUE,
+            addToSpreadsheet = FALSE, ...) {
 
             super$initialize(
                 package="jmvdoe",
@@ -149,6 +150,11 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
                 "plotMeans",
                 plotMeans,
                 default=TRUE)
+            private$..addToSpreadsheet <- jmvcore::OptionAction$new(
+                "addToSpreadsheet",
+                addToSpreadsheet)
+            private$..designOutput <- jmvcore::OptionOutput$new(
+                "designOutput")
 
             self$.addOption(private$..arrayId)
             self$.addOption(private$..factors)
@@ -165,6 +171,8 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
             self$.addOption(private$..snModel)
             self$.addOption(private$..plotSN)
             self$.addOption(private$..plotMeans)
+            self$.addOption(private$..addToSpreadsheet)
+            self$.addOption(private$..designOutput)
         }),
     active = list(
         arrayId = function() private$..arrayId$value,
@@ -181,7 +189,9 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
         snType = function() private$..snType$value,
         snModel = function() private$..snModel$value,
         plotSN = function() private$..plotSN$value,
-        plotMeans = function() private$..plotMeans$value),
+        plotMeans = function() private$..plotMeans$value,
+        addToSpreadsheet = function() private$..addToSpreadsheet$value,
+        designOutput = function() private$..designOutput$value),
     private = list(
         ..arrayId = NA,
         ..factors = NA,
@@ -197,7 +207,9 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
         ..snType = NA,
         ..snModel = NA,
         ..plotSN = NA,
-        ..plotMeans = NA)
+        ..plotMeans = NA,
+        ..addToSpreadsheet = NA,
+        ..designOutput = NA)
 )
 
 taguchiarraysResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -213,7 +225,8 @@ taguchiarraysResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
         analysisResponseMean = function() private$.items[["analysisResponseMean"]],
         analysisSnAnova = function() private$.items[["analysisSnAnova"]],
         analysisPlotSN = function() private$.items[["analysisPlotSN"]],
-        analysisPlotMeans = function() private$.items[["analysisPlotMeans"]]),
+        analysisPlotMeans = function() private$.items[["analysisPlotMeans"]],
+        designOutput = function() private$.items[["designOutput"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -454,7 +467,12 @@ taguchiarraysResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
                 width=500,
                 height=400,
                 renderFun=".plotMeans",
-                visible="(evaluateDesign && plotMeans)"))}))
+                visible="(evaluateDesign && plotMeans)"))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="designOutput",
+                title="Spreadsheet columns",
+                initInRun=TRUE))}))
 
 taguchiarraysBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "taguchiarraysBase",
@@ -474,7 +492,7 @@ taguchiarraysBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 pause = NULL,
                 completeWhenFilled = FALSE,
                 requiresMissings = FALSE,
-                weightsSupport = 'auto')
+                weightsSupport = 'none')
         }))
 
 #' Taguchi Arrays
@@ -496,6 +514,7 @@ taguchiarraysBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param snModel .
 #' @param plotSN .
 #' @param plotMeans .
+#' @param addToSpreadsheet .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$info} \tab \tab \tab \tab \tab a html \cr
@@ -508,6 +527,7 @@ taguchiarraysBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$analysisSnAnova} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$analysisPlotSN} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$analysisPlotMeans} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$designOutput} \tab \tab \tab \tab \tab an output \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -533,7 +553,8 @@ taguchiarrays <- function(
     snType = "smaller",
     snModel = TRUE,
     plotSN = TRUE,
-    plotMeans = TRUE) {
+    plotMeans = TRUE,
+    addToSpreadsheet = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("taguchiarrays requires jmvcore to be installed (restart may be required)")
@@ -558,7 +579,8 @@ taguchiarrays <- function(
         snType = snType,
         snModel = snModel,
         plotSN = plotSN,
-        plotMeans = plotMeans)
+        plotMeans = plotMeans,
+        addToSpreadsheet = addToSpreadsheet)
 
     analysis <- taguchiarraysClass$new(
         options = options,

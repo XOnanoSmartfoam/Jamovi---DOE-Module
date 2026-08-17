@@ -152,4 +152,12 @@ options:
       title: Means main-effects plot
       type: Bool
       default: true
+
+    - name: addToSpreadsheet
+      title: Add design to spreadsheet
+      type: Action
+
+    - name: designOutput
+      title: Columns in Data
+      type: Output
 ...

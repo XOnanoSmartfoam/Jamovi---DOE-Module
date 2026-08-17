@@ -1,7 +1,7 @@
 Package: jmvdoe
 Type: Package
 Title: Design of Experiments for jamovi
-Version: 0.1.10
+Version: 0.1.11
 Authors@R: person("DOE", "Module", role = c("aut", "cre"),
                   email = "doe@example.com")
 Author: DOE Module

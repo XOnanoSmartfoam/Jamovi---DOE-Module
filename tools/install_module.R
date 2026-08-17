@@ -1,0 +1,5 @@
+options(jamovi_home = "C:/Program Files/jamovi 2.6.44.0")
+setwd("C:/Users/jakem/OneDrive/Documents/Jamovi - DOE Module")
+cat("Installing jmvdoe into jamovi...\n")
+jmvtools::install()
+cat("Install finished.\n")
