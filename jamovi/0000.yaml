@@ -1,17 +1,19 @@
 ---
-title: DOE
+title: Design of Experiments and Analysis
 name: jmvdoe
-version: 0.1.11
+version: 1.0.0
 jms: '1.0'
 authors:
-  - DOE Module
-maintainer: DOE Module <doe@example.com>
-date: '2026-08-13'
+  - Jake Merrell
+maintainer: Jake Merrell <jake.merrell@xonano.com>
+date: '2026-09-10'
 type: R
 description: >-
-  JMP-inspired design of experiments for jamovi. Generate full factorial,
-  screening, response surface, custom optimal, and Taguchi designs, and evaluate
-  them in the same analysis including Taguchi signal-to-noise ratios.
+  DOE (design of experiments) tools to generate designed experiments and analyze
+  the measured results in jamovi. Build full factorial, screening, response
+  surface, custom optimal, and Taguchi designs, write the runs to the
+  spreadsheet, then fit a model with regression / ANOVA or Taguchi
+  signal-to-noise ratios.
 analyses:
   - title: Full Factorial Design
     name: fullfactorial
@@ -19,31 +21,72 @@ analyses:
     category: analyses
     menuGroup: DOE
     menuTitle: Full Factorial Design
+    description: >-
+      Generate a full factorial design for factors with two or more levels,
+      including mixed-level designs. Optionally randomize the run order,
+      replicate the whole design, add response columns, and write the runs to
+      the spreadsheet. After you measure the responses, fit a model with Analyze
+      Design.
   - title: Screening Design
     name: screening
     ns: jmvdoe
     category: analyses
     menuGroup: DOE
     menuTitle: Screening Design
+    description: >-
+      Generate a two-level screening design to find which factors matter with
+      relatively few runs. Choose a regular fractional factorial (FrF2) or a
+      Plackett-Burman array, set the number of runs and optional centre points,
+      then write the design to the spreadsheet. Fit the measured results with
+      Analyze Design.
   - title: Response Surface Design
     name: rsmdesign
     ns: jmvdoe
     category: analyses
     menuGroup: DOE
     menuTitle: Response Surface Design
+    description: >-
+      Generate a response-surface design for continuous factors when you need
+      curvature, not only main effects. Choose a central composite design
+      (rotatable or face-centered) or a Box-Behnken design, then write the runs
+      to the spreadsheet. Fit a quadratic model to the measured results with
+      Analyze Design.
   - title: Custom Design
     name: customdesign
     ns: jmvdoe
     category: analyses
     menuGroup: DOE
     menuTitle: Custom Design
+    description: >-
+      Generate a custom optimal design when a standard factorial, screening, or
+      response-surface array does not fit the run budget or factor mix. Choose a
+      model (mains, two-factor interactions, or quadratic) and D- or
+      I-optimality, then write the runs to the spreadsheet.
   - title: Taguchi Arrays
     name: taguchiarrays
     ns: jmvdoe
     category: analyses
     menuGroup: DOE
     menuTitle: Taguchi Arrays
-usesNative: true
+    description: >-
+      Generate a Taguchi orthogonal array for control factors, with an optional
+      outer / noise array. The inner array is written at least twice so S/N
+      ANOVA has residual degrees of freedom without pooling a factor. After the
+      experiment, fit the measured results with Analyze Design.
+  - title: Analyze Design
+    name: analyzedesign
+    ns: jmvdoe
+    category: analyses
+    menuGroup: DOE
+    menuTitle: Analyze Design
+    description: >-
+      Fit a model to measured results after you have run the experiment. Use
+      regression / ANOVA (effect summary, Type III logworth, plots, preferred
+      settings) or Taguchi signal-to-noise analysis, including SN delta and
+      rank, percent contribution, and a predicted SN at the preferred settings.
+      Move the measured columns into Responses and the design columns into
+      Factors.
+usesNative: false
 minApp: 1.0.8
 
 ...

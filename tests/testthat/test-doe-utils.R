@@ -67,6 +67,12 @@ test_that("integer options coerce from jamovi-like values", {
     expect_equal(.doe_int_opt(-2, min = 1L), 1L)
 })
 
+test_that("Taguchi replicate requests below 2 are raised to 2", {
+    expect_equal(.doe_int_opt(1, default = 2L, min = 2L), 2L)
+    expect_equal(.doe_int_opt(NULL, default = 2L, min = 2L), 2L)
+    expect_equal(.doe_int_opt(4, default = 2L, min = 2L), 4L)
+})
+
 test_that("design replicates use DoE-style run.rep labels", {
     skip_if_not_installed("DoE.base")
     des <- .doe_make_oa(

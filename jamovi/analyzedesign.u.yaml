@@ -1,0 +1,158 @@
+title: Analyze Design
+name: analyzedesign
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Responses (measured)
+        children:
+          - type: VariablesListBox
+            name: responses
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Factors
+        children:
+          - type: VariablesListBox
+            name: factors
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Pooled into error
+        children:
+          - type: VariablesListBox
+            name: pooledFactor
+            maxItemCount: 1
+            isTarget: true
+            enable: (method:taguchi)
+  - type: LayoutBox
+    margin: large
+    stretchFactor: 1
+    children:
+      - type: Label
+        stretchFactor: 1
+        label: 'Responses are the columns you measured;'
+      - type: Label
+        stretchFactor: 1
+        label: 'factors are the columns you varied.'
+      - type: Label
+        stretchFactor: 1
+        label: 'Runs with no measured value yet are skipped.'
+      - type: Label
+        stretchFactor: 1
+        label: 'For Taguchi ANOVA, move one negligible factor into Pooled into error'
+        enable: (method:taguchi)
+      - type: Label
+        stretchFactor: 1
+        label: 'to free residual df.'
+        enable: (method:taguchi)
+  - type: CollapseBox
+    label: Model
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: ComboBox
+            name: method
+          - type: ComboBox
+            name: model
+            enable: (method:regression)
+          - type: TextBox
+            name: customTerms
+            format: string
+            width: largest
+            enable: (method:regression && model:custom)
+          - type: Label
+            stretchFactor: 1
+            label: 'Custom terms use R formula syntax, for example:'
+          - type: Label
+            stretchFactor: 1
+            label: 'Temp + Time + Temp:Time.'
+          - type: TextBox
+            name: excludeTerms
+            format: string
+            width: largest
+            enable: (method:regression)
+          - type: Label
+            stretchFactor: 1
+            label: 'Exclude terms are dropped from the model.'
+            enable: (method:regression)
+          - type: Label
+            stretchFactor: 1
+            label: 'Comma-separated, for example Temp:Time, I(Temp^2).'
+            enable: (method:regression)
+          - type: CheckBox
+            name: effectFDR
+            enable: (method:regression)
+          - type: ComboBox
+            name: snType
+            enable: (method:taguchi)
+          - type: Label
+            stretchFactor: 1
+            label: 'Taguchi treats the responses as repeats of one run'
+          - type: Label
+            stretchFactor: 1
+            label: 'and uses their signal-to-noise ratio.'
+  - type: CollapseBox
+    label: Preferred settings
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: ComboBox
+            name: goal
+          - type: TextBox
+            name: target
+            format: number
+            enable: (goal:match)
+          - type: Label
+            stretchFactor: 1
+            label: 'The goal applies to every selected response'
+          - type: Label
+            stretchFactor: 1
+            label: 'and sets which factor levels count as preferred.'
+  - type: CollapseBox
+    label: Plots
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: CheckBox
+            name: effectSummary
+            enable: (method:regression)
+          - type: CheckBox
+            name: halfNormal
+            enable: (method:regression)
+          - type: CheckBox
+            name: pareto
+            enable: (method:regression)
+          - type: CheckBox
+            name: mainEffects
+            enable: (method:regression)
+          - type: CheckBox
+            name: interaction
+            enable: (method:regression)
+          - type: CheckBox
+            name: residuals
+            enable: (method:regression)
+          - type: CheckBox
+            name: contour
+            enable: (method:regression)
+          - type: CheckBox
+            name: snModel
+            enable: (method:taguchi)
+          - type: CheckBox
+            name: plotSN
+            enable: (method:taguchi)
+          - type: CheckBox
+            name: plotMeans
+            enable: (method:taguchi)

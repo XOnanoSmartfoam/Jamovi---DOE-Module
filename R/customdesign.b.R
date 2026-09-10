@@ -86,16 +86,6 @@ customdesignClass <- if (requireNamespace('jmvcore', quietly = TRUE)) R6::R6Clas
                 df, fac_df, resp_df, seed
             )
             self$results$efficiency$setContent(paste(c(deff, ieff), collapse = "\n"))
-            .doe_maybe_evaluate_lm(
-                self, fac_df, resp_df, factors$name, self$options$model,
-                resp_info = resp_info
-            )
-        },
-        .plotHalfNormal = function(image, ...) .doe_plot_half_normal(image),
-        .plotPareto = function(image, ...) .doe_plot_pareto(image),
-        .plotMainEffects = function(image, ...) .doe_plot_main_effects(image),
-        .plotInteraction = function(image, ...) .doe_plot_interaction(image),
-        .plotResiduals = function(image, ...) .doe_plot_residuals(image),
-        .plotContour = function(image, ...) .doe_plot_contour(image)
+        }
     )
 )

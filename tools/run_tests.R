@@ -1,0 +1,8 @@
+.libPaths(c(file.path(getwd(), "build", "R4.4.1-x64-win64"), .libPaths()))
+cat("A: libpaths ok\n"); flush(stdout())
+library(testthat)
+cat("B: testthat ok\n"); flush(stdout())
+library(jmvdoe)
+cat("C: jmvdoe ok\n"); flush(stdout())
+res <- test_dir("tests/testthat", reporter = "summary", stop_on_failure = FALSE)
+cat("D: done\n"); flush(stdout())

@@ -1,0 +1,187 @@
+---
+name: analyzedesign
+title: Analyze Design
+menuGroup: DOE
+version: '1.0.0'
+jas: '1.2'
+
+description:
+    main: >-
+        Fit a model to measured results after you have run the experiment.
+        Use regression / ANOVA (effect summary, Type III logworth, plots,
+        preferred settings) or Taguchi signal-to-noise analysis, including SN
+        delta and rank, percent contribution, and a predicted SN at the
+        preferred settings. Move the measured columns into Responses and the
+        design columns into Factors.
+
+options:
+    - name: data
+      type: Data
+      description:
+          R: the data as a data frame
+
+    - name: responses
+      title: Responses
+      type: Variables
+      suggested:
+        - continuous
+      permitted:
+        - numeric
+      description:
+          R: the measured response column(s) to model
+
+    - name: factors
+      title: Factors
+      type: Variables
+      suggested:
+        - nominal
+        - continuous
+      permitted:
+        - factor
+        - numeric
+      description:
+          R: the design factor columns
+
+    - name: pooledFactor
+      title: Pooled into error
+      type: Variable
+      suggested:
+        - nominal
+        - continuous
+      permitted:
+        - factor
+        - numeric
+      default: null
+      description:
+          R: >-
+              a factor whose variation is treated as error in the Taguchi
+              S/N ANOVA, rather than tested
+
+    - name: method
+      title: Analysis
+      type: List
+      options:
+        - title: Regression / ANOVA
+          name: regression
+        - title: Taguchi signal-to-noise
+          name: taguchi
+      default: regression
+
+    - name: model
+      title: Model
+      type: List
+      options:
+        - title: Main effects
+          name: main
+        - title: Main + 2-factor interactions
+          name: main2fi
+        - title: Response surface (quadratic)
+          name: rsm
+        - title: Custom terms
+          name: custom
+      default: main2fi
+
+    - name: customTerms
+      title: Custom terms
+      type: String
+      default: ''
+
+    - name: excludeTerms
+      title: Exclude terms
+      type: String
+      default: ''
+      description:
+          R: >-
+              comma-separated model terms to drop before fitting, using the
+              names shown in Effect Summary (for example Temp:Time or Temp*Time)
+
+    - name: effectFDR
+      title: FDR
+      type: Bool
+      default: false
+      description:
+          R: >-
+              compute Effect Summary logworth from BH false-discovery-rate
+              adjusted p-values
+
+    - name: effectSummary
+      title: Effect summary
+      type: Bool
+      default: true
+
+    - name: goal
+      title: Goal
+      type: List
+      options:
+        - title: Maximize
+          name: maximize
+        - title: Minimize
+          name: minimize
+        - title: Match target
+          name: match
+      default: maximize
+
+    - name: target
+      title: Target value
+      type: Number
+      default: 0
+
+    - name: snType
+      title: Signal-to-noise type
+      type: List
+      options:
+        - title: From goal
+          name: auto
+        - title: Smaller-the-better
+          name: smaller
+        - title: Larger-the-better
+          name: larger
+        - title: Nominal-the-best
+          name: nominal
+      default: auto
+
+    - name: snModel
+      title: ANOVA on SN ratios
+      type: Bool
+      default: true
+
+    - name: plotSN
+      title: SN main effects plot
+      type: Bool
+      default: true
+
+    - name: plotMeans
+      title: Means main effects plot
+      type: Bool
+      default: true
+
+    - name: halfNormal
+      title: Half-normal plot
+      type: Bool
+      default: true
+
+    - name: pareto
+      title: Pareto plot of |effects|
+      type: Bool
+      default: true
+
+    - name: mainEffects
+      title: Main effects plot
+      type: Bool
+      default: false
+
+    - name: interaction
+      title: Interaction plot
+      type: Bool
+      default: false
+
+    - name: residuals
+      title: Residual plots
+      type: Bool
+      default: true
+
+    - name: contour
+      title: Contour plot (first two continuous factors)
+      type: Bool
+      default: false
+...

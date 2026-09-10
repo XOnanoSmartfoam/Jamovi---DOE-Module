@@ -80,7 +80,14 @@ children:
             format: number
             enable: (randomize)
           - type: Label
-            label: 'Each extra copy stacks the whole design (Run 1.1, 1.2, …). The Design Table updates as you change settings. Click Add design to spreadsheet when you want the runs in Data.'
+            stretchFactor: 1
+            label: 'Each extra copy stacks the whole design (Run 1.1, 1.2, …).'
+          - type: Label
+            stretchFactor: 1
+            label: 'The Design Table updates as you change settings. Check Add design to'
+          - type: Label
+            stretchFactor: 1
+            label: 'spreadsheet when you want the runs in Data.'
   - type: CollapseBox
     label: Spreadsheet
     collapsed: false
@@ -89,48 +96,26 @@ children:
       - type: LayoutBox
         margin: large
         children:
-          - type: ActionButton
-            name: addToSpreadsheet
-            label: Add design to spreadsheet
           - type: Output
             name: designOutput
           - type: Label
-            label: 'Writes Run, factor, and response columns into the Data spreadsheet. Use a new/empty file so existing columns are not mixed with the design.'
-  - type: CollapseBox
-    label: Evaluate
-    collapsed: false
-    stretchFactor: 1
+            stretchFactor: 1
+            label: 'Writes Run, factor, and response columns into the Data spreadsheet'
+          - type: Label
+            stretchFactor: 1
+            label: 'and keeps them in step with the design.'
+          - type: Label
+            stretchFactor: 1
+            label: 'Use a new or empty file so existing columns are not mixed with'
+          - type: Label
+            stretchFactor: 1
+            label: 'the design.'
+  - type: LayoutBox
+    margin: large
     children:
-      - type: LayoutBox
-        margin: large
-        children:
-          - type: CheckBox
-            name: evaluateDesign
-          - type: ComboBox
-            name: analysisModel
-            enable: (evaluateDesign)
-      - type: CollapseBox
-        label: Evaluation plots
-        collapsed: true
-        children:
-          - type: LayoutBox
-            margin: large
-            children:
-              - type: CheckBox
-                name: halfNormal
-                enable: (evaluateDesign)
-              - type: CheckBox
-                name: pareto
-                enable: (evaluateDesign)
-              - type: CheckBox
-                name: mainEffects
-                enable: (evaluateDesign)
-              - type: CheckBox
-                name: interaction
-                enable: (evaluateDesign)
-              - type: CheckBox
-                name: residuals
-                enable: (evaluateDesign)
-              - type: CheckBox
-                name: contour
-                enable: (evaluateDesign)
+      - type: Label
+        stretchFactor: 1
+        label: 'When the runs are done and the measured values are in the'
+      - type: Label
+        stretchFactor: 1
+        label: 'spreadsheet, fit the model with DOE > Analyze Design.'

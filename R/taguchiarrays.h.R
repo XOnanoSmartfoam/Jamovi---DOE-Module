@@ -10,18 +10,12 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
             factors = list(),
             useOuter = FALSE,
             noiseFactors = list(),
-            replicates = 1,
+            replicates = 2,
             randomize = TRUE,
             seed = 1,
             responses = list(),
             responseTarget = 0,
-            simulateResponses = TRUE,
-            evaluateDesign = FALSE,
-            snType = "smaller",
-            snModel = TRUE,
-            plotSN = TRUE,
-            plotMeans = TRUE,
-            addToSpreadsheet = FALSE, ...) {
+            simulateResponses = TRUE, ...) {
 
             super$initialize(
                 package="jmvdoe",
@@ -82,8 +76,8 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
             private$..replicates <- jmvcore::OptionInteger$new(
                 "replicates",
                 replicates,
-                min=1,
-                default=1)
+                min=2,
+                default=2)
             private$..randomize <- jmvcore::OptionBool$new(
                 "randomize",
                 randomize,
@@ -125,34 +119,6 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
                 "simulateResponses",
                 simulateResponses,
                 default=TRUE)
-            private$..evaluateDesign <- jmvcore::OptionBool$new(
-                "evaluateDesign",
-                evaluateDesign,
-                default=FALSE)
-            private$..snType <- jmvcore::OptionList$new(
-                "snType",
-                snType,
-                hidden=TRUE,
-                options=list(
-                    "smaller",
-                    "larger",
-                    "nominal"),
-                default="smaller")
-            private$..snModel <- jmvcore::OptionBool$new(
-                "snModel",
-                snModel,
-                default=TRUE)
-            private$..plotSN <- jmvcore::OptionBool$new(
-                "plotSN",
-                plotSN,
-                default=TRUE)
-            private$..plotMeans <- jmvcore::OptionBool$new(
-                "plotMeans",
-                plotMeans,
-                default=TRUE)
-            private$..addToSpreadsheet <- jmvcore::OptionAction$new(
-                "addToSpreadsheet",
-                addToSpreadsheet)
             private$..designOutput <- jmvcore::OptionOutput$new(
                 "designOutput")
 
@@ -166,12 +132,6 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
             self$.addOption(private$..responses)
             self$.addOption(private$..responseTarget)
             self$.addOption(private$..simulateResponses)
-            self$.addOption(private$..evaluateDesign)
-            self$.addOption(private$..snType)
-            self$.addOption(private$..snModel)
-            self$.addOption(private$..plotSN)
-            self$.addOption(private$..plotMeans)
-            self$.addOption(private$..addToSpreadsheet)
             self$.addOption(private$..designOutput)
         }),
     active = list(
@@ -185,12 +145,6 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
         responses = function() private$..responses$value,
         responseTarget = function() private$..responseTarget$value,
         simulateResponses = function() private$..simulateResponses$value,
-        evaluateDesign = function() private$..evaluateDesign$value,
-        snType = function() private$..snType$value,
-        snModel = function() private$..snModel$value,
-        plotSN = function() private$..plotSN$value,
-        plotMeans = function() private$..plotMeans$value,
-        addToSpreadsheet = function() private$..addToSpreadsheet$value,
         designOutput = function() private$..designOutput$value),
     private = list(
         ..arrayId = NA,
@@ -203,12 +157,6 @@ taguchiarraysOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
         ..responses = NA,
         ..responseTarget = NA,
         ..simulateResponses = NA,
-        ..evaluateDesign = NA,
-        ..snType = NA,
-        ..snModel = NA,
-        ..plotSN = NA,
-        ..plotMeans = NA,
-        ..addToSpreadsheet = NA,
         ..designOutput = NA)
 )
 
@@ -218,14 +166,6 @@ taguchiarraysResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
     active = list(
         info = function() private$.items[["info"]],
         design = function() private$.items[["design"]],
-        analysisInfo = function() private$.items[["analysisInfo"]],
-        analysisRecommend = function() private$.items[["analysisRecommend"]],
-        analysisPerRun = function() private$.items[["analysisPerRun"]],
-        analysisResponseSN = function() private$.items[["analysisResponseSN"]],
-        analysisResponseMean = function() private$.items[["analysisResponseMean"]],
-        analysisSnAnova = function() private$.items[["analysisSnAnova"]],
-        analysisPlotSN = function() private$.items[["analysisPlotSN"]],
-        analysisPlotMeans = function() private$.items[["analysisPlotMeans"]],
         designOutput = function() private$.items[["designOutput"]]),
     private = list(),
     public=list(
@@ -269,205 +209,6 @@ taguchiarraysResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cla
                         `name`="Run", 
                         `title`="Run", 
                         `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="analysisInfo",
-                title="Taguchi Summary",
-                visible="(evaluateDesign)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "snType",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses",
-                    "useOuter",
-                    "noiseFactors")))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="analysisRecommend",
-                title="Preferred settings",
-                visible="(evaluateDesign)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "snType",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses",
-                    "useOuter",
-                    "noiseFactors"),
-                columns=list(
-                    list(
-                        `name`="response", 
-                        `title`="Response", 
-                        `type`="text"),
-                    list(
-                        `name`="goal", 
-                        `title`="Goal", 
-                        `type`="text"),
-                    list(
-                        `name`="factor", 
-                        `title`="Factor", 
-                        `type`="text"),
-                    list(
-                        `name`="level", 
-                        `title`="Preferred level", 
-                        `type`="text"),
-                    list(
-                        `name`="mean", 
-                        `title`="Mean", 
-                        `type`="number"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="analysisPerRun",
-                title="Per-run SN and Mean",
-                visible="(evaluateDesign)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "snType",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses",
-                    "useOuter",
-                    "noiseFactors"),
-                columns=list(
-                    list(
-                        `name`="run", 
-                        `title`="Run", 
-                        `type`="integer"),
-                    list(
-                        `name`="mean", 
-                        `title`="Mean", 
-                        `type`="number"),
-                    list(
-                        `name`="sn", 
-                        `title`="SN", 
-                        `type`="number"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="analysisResponseSN",
-                title="Response Table (SN)",
-                visible="(evaluateDesign)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "snType",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses",
-                    "useOuter",
-                    "noiseFactors"),
-                columns=list(
-                    list(
-                        `name`="factor", 
-                        `title`="Factor", 
-                        `type`="text"),
-                    list(
-                        `name`="level", 
-                        `title`="Level", 
-                        `type`="text"),
-                    list(
-                        `name`="meanSN", 
-                        `title`="Mean SN", 
-                        `type`="number"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="analysisResponseMean",
-                title="Response Table (Means)",
-                visible="(evaluateDesign)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "snType",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses",
-                    "useOuter",
-                    "noiseFactors"),
-                columns=list(
-                    list(
-                        `name`="factor", 
-                        `title`="Factor", 
-                        `type`="text"),
-                    list(
-                        `name`="level", 
-                        `title`="Level", 
-                        `type`="text"),
-                    list(
-                        `name`="meanY", 
-                        `title`="Mean Response", 
-                        `type`="number"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="analysisSnAnova",
-                title="ANOVA on SN",
-                visible="(evaluateDesign && snModel)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "snType",
-                    "snModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses",
-                    "useOuter",
-                    "noiseFactors"),
-                columns=list(
-                    list(
-                        `name`="term", 
-                        `title`="Term", 
-                        `type`="text"),
-                    list(
-                        `name`="ss", 
-                        `title`="Sum of Squares", 
-                        `type`="number"),
-                    list(
-                        `name`="df", 
-                        `title`="df", 
-                        `type`="integer"),
-                    list(
-                        `name`="ms", 
-                        `title`="Mean Square", 
-                        `type`="number"),
-                    list(
-                        `name`="F", 
-                        `title`="F", 
-                        `type`="number"),
-                    list(
-                        `name`="p", 
-                        `title`="p", 
-                        `type`="number", 
-                        `format`="zto,pvalue"))))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="analysisPlotSN",
-                title="SN Main Effects",
-                width=500,
-                height=400,
-                renderFun=".plotSN",
-                visible="(evaluateDesign && plotSN)"))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="analysisPlotMeans",
-                title="Means Main Effects",
-                width=500,
-                height=400,
-                renderFun=".plotMeans",
-                visible="(evaluateDesign && plotMeans)"))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="designOutput",
@@ -497,36 +238,26 @@ taguchiarraysBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
 #' Taguchi Arrays
 #'
-#' 
+#' Generate a Taguchi orthogonal array for control factors, with an optional 
+#' outer / noise array. The inner array is written at least twice so S/N ANOVA 
+#' has residual degrees of freedom without pooling a factor. After the 
+#' experiment, fit the measured results with Analyze Design.
 #' @param data .
 #' @param arrayId .
 #' @param factors .
 #' @param useOuter .
 #' @param noiseFactors .
-#' @param replicates .
+#' @param replicates copies of the inner array; at least two so S/N ANOVA has
+#'   residual degrees of freedom without pooling a factor
 #' @param randomize .
 #' @param seed .
 #' @param responses .
 #' @param responseTarget .
 #' @param simulateResponses .
-#' @param evaluateDesign .
-#' @param snType .
-#' @param snModel .
-#' @param plotSN .
-#' @param plotMeans .
-#' @param addToSpreadsheet .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$info} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$design} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$analysisInfo} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$analysisRecommend} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$analysisPerRun} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$analysisResponseSN} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$analysisResponseMean} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$analysisSnAnova} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$analysisPlotSN} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$analysisPlotMeans} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$designOutput} \tab \tab \tab \tab \tab an output \cr
 #' }
 #'
@@ -543,18 +274,12 @@ taguchiarrays <- function(
     factors = list(),
     useOuter = FALSE,
     noiseFactors = list(),
-    replicates = 1,
+    replicates = 2,
     randomize = TRUE,
     seed = 1,
     responses = list(),
     responseTarget = 0,
-    simulateResponses = TRUE,
-    evaluateDesign = FALSE,
-    snType = "smaller",
-    snModel = TRUE,
-    plotSN = TRUE,
-    plotMeans = TRUE,
-    addToSpreadsheet = FALSE) {
+    simulateResponses = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("taguchiarrays requires jmvcore to be installed (restart may be required)")
@@ -574,13 +299,7 @@ taguchiarrays <- function(
         seed = seed,
         responses = responses,
         responseTarget = responseTarget,
-        simulateResponses = simulateResponses,
-        evaluateDesign = evaluateDesign,
-        snType = snType,
-        snModel = snModel,
-        plotSN = plotSN,
-        plotMeans = plotMeans,
-        addToSpreadsheet = addToSpreadsheet)
+        simulateResponses = simulateResponses)
 
     analysis <- taguchiarraysClass$new(
         options = options,

@@ -1,5 +1,6 @@
-# Re-sending identical Output data re-triggers the analysis in jamovi, which
-# starves later option changes. Guard against that regression.
+# An unchanged design must be reported as unchanged, so the results panel does
+# not claim it re-sent anything. The columns are still declared and filled every
+# run, because omitting them makes jamovi clear or delete them.
 
 source(file.path("..", "..", "R", "doe-utils.R"))
 
@@ -19,7 +20,7 @@ fac <- data.frame(
 )
 resp <- data.frame(Y = c(1, 2, 3, 4))
 
-test_that("first write sends data, identical second run does not", {
+test_that("first write reports a send, an identical second run reports unchanged", {
     skip_if_not_installed("jmvcore")
     out <- make_output()
 

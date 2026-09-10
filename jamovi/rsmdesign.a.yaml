@@ -6,6 +6,14 @@ version: '1.0.0'
 jas: '1.2'
 completeWhenFilled: false
 
+description:
+    main: >-
+        Generate a response-surface design for continuous factors when you
+        need curvature, not only main effects. Choose a central composite
+        design (rotatable or face-centered) or a Box-Behnken design, then
+        write the runs to the spreadsheet. Fit a quadratic model to the
+        measured results with Analyze Design.
+
 options:
     - name: data
       type: Data
@@ -103,58 +111,7 @@ options:
       type: Bool
       default: true
 
-    - name: evaluateDesign
-      title: Evaluate this design
-      type: Bool
-      default: false
-
-    - name: analysisModel
-      title: Analysis model
-      type: List
-      options:
-        - title: Main effects
-          name: main
-        - title: Main + 2-factor interactions
-          name: main2fi
-        - title: Response surface (quadratic)
-          name: rsm
-      default: rsm
-
-    - name: halfNormal
-      title: Half-normal plot
-      type: Bool
-      default: true
-
-    - name: pareto
-      title: Pareto plot of |effects|
-      type: Bool
-      default: true
-
-    - name: mainEffects
-      title: Main effects plot
-      type: Bool
-      default: false
-
-    - name: interaction
-      title: Interaction plot
-      type: Bool
-      default: false
-
-    - name: residuals
-      title: Residual plots
-      type: Bool
-      default: true
-
-    - name: contour
-      title: Contour plot (first two continuous factors)
-      type: Bool
-      default: true
-
-    - name: addToSpreadsheet
-      title: Add design to spreadsheet
-      type: Action
-
     - name: designOutput
-      title: Columns in Data
+      title: Add design to spreadsheet
       type: Output
 ...

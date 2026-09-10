@@ -439,15 +439,24 @@
     FALSE
 }
 
-#' Send the design to the spreadsheet, but only when the user asked for it.
+#' Is the design Output switched on in the options panel?
 #'
-#' Touching the Output makes jamovi rewrite the analysis options server side,
-#' which desynchronises the options panel and freezes every later edit. Writing
-#' only when the Add design to spreadsheet button is clicked keeps design
-#' iteration free of that round trip.
+#' jmvcore wraps the whole of Output$asProtoBuf in `if (self$enabled)`, and
+#' `enabled` tracks the matching Output option. While the box is unchecked
+#' jamovi discards every column we write, so there is nothing to gain from
+#' building the payload. An Action button cannot stand in for this: jamovi
+#' resets Action options to false after each run, so the click is already gone
+#' by the time the Output is enabled.
+.doe_output_enabled <- function(self) {
+    enabled <- tryCatch(self$results$designOutput$enabled, error = function(e) NULL)
+    if (!is.null(enabled))
+        return(isTRUE(enabled))
+    .doe_opt_on(tryCatch(self$options$designOutput, error = function(e) FALSE))
+}
+
+#' Send the design to the spreadsheet, but only when the user asked for it.
 .doe_try_write_design <- function(self, factor_df, response_df, seed) {
-    action <- .doe_opt_on(tryCatch(self$options$addToSpreadsheet, error = function(e) FALSE))
-    if (!action)
+    if (!.doe_output_enabled(self))
         return(list(ok = FALSE, disabled = TRUE))
 
     tryCatch(
@@ -589,23 +598,16 @@
     if (!isTRUE(payload$ok))
         return(payload)
 
-    # Re-sending identical data makes jamovi write back the designOutput option
-    # and notify analyses that the data changed, which re-triggers this analysis.
-    # That loop keeps the engine busy re-running with the previous options, so
-    # later option changes (e.g. replicates) never take effect. Only send when
-    # the design differs, or when jamovi reports the columns as not filled.
+    # jamovi rebuilds this Output on every run, so the columns have to be
+    # declared and filled each time. Declaring without filling makes the server
+    # clear the columns; skipping both makes it delete them, because an empty
+    # column list reads as "this option no longer produces these columns".
+    # The signature is therefore only used to describe what happened.
     sig <- .doe_output_signature(payload)
     prev <- tryCatch(output$state, error = function(e) NULL)
     filled <- isTRUE(tryCatch(output$isFilled(), error = function(e) FALSE))
-    if (filled && is.character(prev) && length(prev) == 1L && identical(prev, sig)) {
-        return(list(
-            ok = TRUE,
-            unchanged = TRUE,
-            n_rows = payload$n_rows,
-            n_cols = payload$n_cols,
-            response_df = payload$response_df
-        ))
-    }
+    unchanged <- filled && is.character(prev) && length(prev) == 1L &&
+        identical(prev, sig)
 
     output$set(
         keys = payload$keys,
@@ -622,18 +624,21 @@
     }
     tryCatch(output$setState(sig), error = function(e) invisible(NULL))
 
-    list(
+    res <- list(
         ok = TRUE,
         n_rows = payload$n_rows,
         n_cols = payload$n_cols,
         response_df = payload$response_df
     )
+    if (unchanged)
+        res$unchanged <- TRUE
+    res
 }
 
 .doe_preview_tip <- function() {
     paste0(
         "<p>The Design Table below updates as you change factors, responses and ",
-        "replicates. Click <b>Add design to spreadsheet</b> when you want the runs in Data.</p>"
+        "replicates. Check <b>Add design to spreadsheet</b> when you want the runs in Data.</p>"
     )
 }
 
@@ -643,7 +648,8 @@
             "<p>This is a <b>preview</b>. The design below updates as you change ",
             "factors, responses and replicates, and nothing has been written to the ",
             "<b>Data</b> spreadsheet yet.</p>",
-            "<p>When the design is final, click <b>Add design to spreadsheet</b>.</p>"
+            "<p>When the design is final, open <b>Spreadsheet</b> and check ",
+            "<b>Add design to spreadsheet</b>.</p>"
         ))
     }
     if (isTRUE(write_res$ok)) {
@@ -662,9 +668,10 @@
             sim_note,
             " If you see <code>A (2)</code> instead of <code>A</code>, delete jamovi's empty starter columns ",
             "(right-click A, B, C → Delete) and send the design again.</p>",
-            "<p>Click <b>Add design to spreadsheet</b> again after you change the design. ",
-            "Uncheck <b>Columns in Data</b> to remove the generated columns. ",
-            "Check <b>Evaluate this design</b> to analyze these runs here.</p>"
+            "<p>The columns follow the design, so they update as you edit it. ",
+            "Uncheck <b>Add design to spreadsheet</b> to remove them.</p>",
+            "<p>Once the runs are done and the measured values are typed in, fit the ",
+            "model with <b>DOE</b> &rarr; <b>Analyze Design</b>.</p>"
         ))
     }
     if (!is.null(write_res$error) && nzchar(write_res$error)) {
@@ -720,9 +727,9 @@
 #' Instructions note for jamovi design generators.
 .doe_copy_instructions <- function() {
     paste(
-        "Click Add design to spreadsheet to write these runs to Data.",
+        "Check Add design to spreadsheet to write these runs to Data.",
         "Delete jamovi's empty A, B, C columns first if you want those names reused.",
-        "Check Evaluate this design to analyze these runs in this same results panel."
+        "Analyze the measured results with DOE > Analyze Design."
     )
 }
 

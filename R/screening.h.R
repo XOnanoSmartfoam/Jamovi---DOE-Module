@@ -15,16 +15,7 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             seed = 1,
             responses = list(),
             responseTarget = 0,
-            simulateResponses = TRUE,
-            evaluateDesign = FALSE,
-            analysisModel = "main",
-            halfNormal = TRUE,
-            pareto = TRUE,
-            mainEffects = FALSE,
-            interaction = FALSE,
-            residuals = TRUE,
-            contour = FALSE,
-            addToSpreadsheet = FALSE, ...) {
+            simulateResponses = TRUE, ...) {
 
             super$initialize(
                 package="jmvdoe",
@@ -111,45 +102,6 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "simulateResponses",
                 simulateResponses,
                 default=TRUE)
-            private$..evaluateDesign <- jmvcore::OptionBool$new(
-                "evaluateDesign",
-                evaluateDesign,
-                default=FALSE)
-            private$..analysisModel <- jmvcore::OptionList$new(
-                "analysisModel",
-                analysisModel,
-                options=list(
-                    "main",
-                    "main2fi",
-                    "rsm"),
-                default="main")
-            private$..halfNormal <- jmvcore::OptionBool$new(
-                "halfNormal",
-                halfNormal,
-                default=TRUE)
-            private$..pareto <- jmvcore::OptionBool$new(
-                "pareto",
-                pareto,
-                default=TRUE)
-            private$..mainEffects <- jmvcore::OptionBool$new(
-                "mainEffects",
-                mainEffects,
-                default=FALSE)
-            private$..interaction <- jmvcore::OptionBool$new(
-                "interaction",
-                interaction,
-                default=FALSE)
-            private$..residuals <- jmvcore::OptionBool$new(
-                "residuals",
-                residuals,
-                default=TRUE)
-            private$..contour <- jmvcore::OptionBool$new(
-                "contour",
-                contour,
-                default=FALSE)
-            private$..addToSpreadsheet <- jmvcore::OptionAction$new(
-                "addToSpreadsheet",
-                addToSpreadsheet)
             private$..designOutput <- jmvcore::OptionOutput$new(
                 "designOutput")
 
@@ -163,15 +115,6 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..responses)
             self$.addOption(private$..responseTarget)
             self$.addOption(private$..simulateResponses)
-            self$.addOption(private$..evaluateDesign)
-            self$.addOption(private$..analysisModel)
-            self$.addOption(private$..halfNormal)
-            self$.addOption(private$..pareto)
-            self$.addOption(private$..mainEffects)
-            self$.addOption(private$..interaction)
-            self$.addOption(private$..residuals)
-            self$.addOption(private$..contour)
-            self$.addOption(private$..addToSpreadsheet)
             self$.addOption(private$..designOutput)
         }),
     active = list(
@@ -185,15 +128,6 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         responses = function() private$..responses$value,
         responseTarget = function() private$..responseTarget$value,
         simulateResponses = function() private$..simulateResponses$value,
-        evaluateDesign = function() private$..evaluateDesign$value,
-        analysisModel = function() private$..analysisModel$value,
-        halfNormal = function() private$..halfNormal$value,
-        pareto = function() private$..pareto$value,
-        mainEffects = function() private$..mainEffects$value,
-        interaction = function() private$..interaction$value,
-        residuals = function() private$..residuals$value,
-        contour = function() private$..contour$value,
-        addToSpreadsheet = function() private$..addToSpreadsheet$value,
         designOutput = function() private$..designOutput$value),
     private = list(
         ..factors = NA,
@@ -206,15 +140,6 @@ screeningOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..responses = NA,
         ..responseTarget = NA,
         ..simulateResponses = NA,
-        ..evaluateDesign = NA,
-        ..analysisModel = NA,
-        ..halfNormal = NA,
-        ..pareto = NA,
-        ..mainEffects = NA,
-        ..interaction = NA,
-        ..residuals = NA,
-        ..contour = NA,
-        ..addToSpreadsheet = NA,
         ..designOutput = NA)
 )
 
@@ -225,16 +150,6 @@ screeningResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         info = function() private$.items[["info"]],
         design = function() private$.items[["design"]],
         alias = function() private$.items[["alias"]],
-        analysisInfo = function() private$.items[["analysisInfo"]],
-        analysisAnova = function() private$.items[["analysisAnova"]],
-        analysisCoef = function() private$.items[["analysisCoef"]],
-        analysisRecommend = function() private$.items[["analysisRecommend"]],
-        analysisHalfNormal = function() private$.items[["analysisHalfNormal"]],
-        analysisPareto = function() private$.items[["analysisPareto"]],
-        analysisMainEffects = function() private$.items[["analysisMainEffects"]],
-        analysisInteraction = function() private$.items[["analysisInteraction"]],
-        analysisResiduals = function() private$.items[["analysisResiduals"]],
-        analysisContour = function() private$.items[["analysisContour"]],
         designOutput = function() private$.items[["designOutput"]]),
     private = list(),
     public=list(
@@ -289,240 +204,6 @@ screeningResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "centerPoints",
                     "randomize",
                     "seed")))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="analysisInfo",
-                title="Model Summary",
-                visible="(evaluateDesign)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "analysisModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses")))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="analysisAnova",
-                title="ANOVA",
-                visible="(evaluateDesign)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "analysisModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses"),
-                columns=list(
-                    list(
-                        `name`="response", 
-                        `title`="Response", 
-                        `type`="text"),
-                    list(
-                        `name`="term", 
-                        `title`="Term", 
-                        `type`="text"),
-                    list(
-                        `name`="ss", 
-                        `title`="Sum of Squares", 
-                        `type`="number"),
-                    list(
-                        `name`="df", 
-                        `title`="df", 
-                        `type`="integer"),
-                    list(
-                        `name`="ms", 
-                        `title`="Mean Square", 
-                        `type`="number"),
-                    list(
-                        `name`="F", 
-                        `title`="F", 
-                        `type`="number"),
-                    list(
-                        `name`="p", 
-                        `title`="p", 
-                        `type`="number", 
-                        `format`="zto,pvalue"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="analysisCoef",
-                title="Coefficients",
-                visible="(evaluateDesign)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "analysisModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses"),
-                columns=list(
-                    list(
-                        `name`="response", 
-                        `title`="Response", 
-                        `type`="text"),
-                    list(
-                        `name`="term", 
-                        `title`="Term", 
-                        `type`="text"),
-                    list(
-                        `name`="estimate", 
-                        `title`="Estimate", 
-                        `type`="number"),
-                    list(
-                        `name`="se", 
-                        `title`="SE", 
-                        `type`="number"),
-                    list(
-                        `name`="t", 
-                        `title`="t", 
-                        `type`="number"),
-                    list(
-                        `name`="p", 
-                        `title`="p", 
-                        `type`="number", 
-                        `format`="zto,pvalue"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="analysisRecommend",
-                title="Preferred settings",
-                visible="(evaluateDesign)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses"),
-                columns=list(
-                    list(
-                        `name`="response", 
-                        `title`="Response", 
-                        `type`="text"),
-                    list(
-                        `name`="goal", 
-                        `title`="Goal", 
-                        `type`="text"),
-                    list(
-                        `name`="factor", 
-                        `title`="Factor", 
-                        `type`="text"),
-                    list(
-                        `name`="level", 
-                        `title`="Preferred level", 
-                        `type`="text"),
-                    list(
-                        `name`="mean", 
-                        `title`="Mean", 
-                        `type`="number"))))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="analysisHalfNormal",
-                title="Half-Normal Plot",
-                width=450,
-                height=400,
-                renderFun=".plotHalfNormal",
-                visible="(evaluateDesign && halfNormal)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "analysisModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses")))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="analysisPareto",
-                title="Pareto Plot",
-                width=450,
-                height=400,
-                renderFun=".plotPareto",
-                visible="(evaluateDesign && pareto)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "analysisModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses")))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="analysisMainEffects",
-                title="Main Effects Plot",
-                width=500,
-                height=400,
-                renderFun=".plotMainEffects",
-                visible="(evaluateDesign && mainEffects)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "analysisModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses")))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="analysisInteraction",
-                title="Interaction Plot",
-                width=450,
-                height=400,
-                renderFun=".plotInteraction",
-                visible="(evaluateDesign && interaction)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "analysisModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses")))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="analysisResiduals",
-                title="Residual Plots",
-                width=500,
-                height=400,
-                renderFun=".plotResiduals",
-                visible="(evaluateDesign && residuals)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "analysisModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses")))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="analysisContour",
-                title="Contour Plot",
-                width=450,
-                height=400,
-                renderFun=".plotContour",
-                visible="(evaluateDesign && contour)",
-                clearWith=list(
-                    "evaluateDesign",
-                    "analysisModel",
-                    "factors",
-                    "replicates",
-                    "seed",
-                    "responses",
-                    "responseTarget",
-                    "simulateResponses")))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="designOutput",
@@ -552,7 +233,11 @@ screeningBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
 #' Screening Design
 #'
-#' 
+#' Generate a two-level screening design to find which factors matter with 
+#' relatively few runs. Choose a regular fractional factorial (FrF2) or a 
+#' Plackett-Burman array, set the number of runs and optional centre points, 
+#' then write the design to the spreadsheet. Fit the measured results with 
+#' Analyze Design.
 #' @param data .
 #' @param factors .
 #' @param designType .
@@ -564,30 +249,11 @@ screeningBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param responses .
 #' @param responseTarget .
 #' @param simulateResponses .
-#' @param evaluateDesign .
-#' @param analysisModel .
-#' @param halfNormal .
-#' @param pareto .
-#' @param mainEffects .
-#' @param interaction .
-#' @param residuals .
-#' @param contour .
-#' @param addToSpreadsheet .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$info} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$design} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$alias} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$analysisInfo} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$analysisAnova} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$analysisCoef} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$analysisRecommend} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$analysisHalfNormal} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$analysisPareto} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$analysisMainEffects} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$analysisInteraction} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$analysisResiduals} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$analysisContour} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$designOutput} \tab \tab \tab \tab \tab an output \cr
 #' }
 #'
@@ -609,16 +275,7 @@ screening <- function(
     seed = 1,
     responses = list(),
     responseTarget = 0,
-    simulateResponses = TRUE,
-    evaluateDesign = FALSE,
-    analysisModel = "main",
-    halfNormal = TRUE,
-    pareto = TRUE,
-    mainEffects = FALSE,
-    interaction = FALSE,
-    residuals = TRUE,
-    contour = FALSE,
-    addToSpreadsheet = FALSE) {
+    simulateResponses = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("screening requires jmvcore to be installed (restart may be required)")
@@ -638,16 +295,7 @@ screening <- function(
         seed = seed,
         responses = responses,
         responseTarget = responseTarget,
-        simulateResponses = simulateResponses,
-        evaluateDesign = evaluateDesign,
-        analysisModel = analysisModel,
-        halfNormal = halfNormal,
-        pareto = pareto,
-        mainEffects = mainEffects,
-        interaction = interaction,
-        residuals = residuals,
-        contour = contour,
-        addToSpreadsheet = addToSpreadsheet)
+        simulateResponses = simulateResponses)
 
     analysis <- screeningClass$new(
         options = options,

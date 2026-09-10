@@ -1,0 +1,315 @@
+---
+name: analyzedesign
+title: Analyze Design
+jrs: '1.1'
+
+items:
+    - name: analysisInfo
+      title: Model Summary
+      type: Html
+      clearWith: &clear
+        - responses
+        - factors
+        - pooledFactor
+        - method
+        - model
+        - customTerms
+        - excludeTerms
+        - effectFDR
+        - effectSummary
+        - goal
+        - target
+        - snType
+
+    - name: analysisEffects
+      title: Effect Summary
+      type: Table
+      visible: (method:regression && effectSummary)
+      clearWith: *clear
+      columns:
+        - name: response
+          title: Response
+          type: text
+        - name: term
+          title: Source
+          type: text
+        - name: logworth
+          title: Logworth
+          type: number
+        - name: p
+          title: PValue
+          type: number
+          format: zto,pvalue
+
+    - name: analysisEffectPlot
+      title: Effect Summary Plot
+      type: Image
+      width: 500
+      height: 400
+      renderFun: .plotEffectSummary
+      visible: (method:regression && effectSummary)
+      clearWith: *clear
+
+    - name: analysisAnova
+      title: ANOVA
+      type: Table
+      visible: (method:regression)
+      clearWith: *clear
+      columns:
+        - name: response
+          title: Response
+          type: text
+        - name: term
+          title: Term
+          type: text
+        - name: ss
+          title: Sum of Squares
+          type: number
+        - name: df
+          title: df
+          type: integer
+        - name: ms
+          title: Mean Square
+          type: number
+        - name: F
+          title: F
+          type: number
+        - name: p
+          title: p
+          type: number
+          format: zto,pvalue
+
+    - name: analysisCoef
+      title: Coefficients
+      type: Table
+      visible: (method:regression)
+      clearWith: *clear
+      columns:
+        - name: response
+          title: Response
+          type: text
+        - name: term
+          title: Term
+          type: text
+        - name: estimate
+          title: Estimate
+          type: number
+        - name: se
+          title: SE
+          type: number
+        - name: t
+          title: t
+          type: number
+        - name: p
+          title: p
+          type: number
+          format: zto,pvalue
+
+    - name: analysisRecommend
+      title: Preferred settings
+      type: Table
+      clearWith: *clear
+      columns:
+        - name: response
+          title: Response
+          type: text
+        - name: goal
+          title: Goal
+          type: text
+        - name: factor
+          title: Factor
+          type: text
+        - name: level
+          title: Preferred level
+          type: text
+        - name: mean
+          title: Mean
+          type: number
+
+    - name: analysisPerRun
+      title: Per-run SN and Mean
+      type: Table
+      visible: (method:taguchi)
+      clearWith: *clear
+      columns:
+        - name: run
+          title: Run
+          type: integer
+        - name: mean
+          title: Mean
+          type: number
+        - name: sn
+          title: SN
+          type: number
+
+    - name: analysisResponseSN
+      title: Response Table (SN)
+      type: Table
+      visible: (method:taguchi)
+      clearWith: *clear
+      columns:
+        - name: factor
+          title: Factor
+          type: text
+        - name: level
+          title: Level
+          type: text
+        - name: meanSN
+          title: Mean SN
+          type: number
+
+    - name: analysisResponseMean
+      title: Response Table (Means)
+      type: Table
+      visible: (method:taguchi)
+      clearWith: *clear
+      columns:
+        - name: factor
+          title: Factor
+          type: text
+        - name: level
+          title: Level
+          type: text
+        - name: meanY
+          title: Mean Response
+          type: number
+
+    - name: analysisSnDelta
+      title: SN Delta and Rank
+      type: Table
+      visible: (method:taguchi)
+      clearWith: *clear
+      columns:
+        - name: factor
+          title: Factor
+          type: text
+        - name: delta
+          title: Delta
+          type: number
+        - name: rank
+          title: Rank
+          type: integer
+
+    - name: analysisSnPredict
+      title: Predicted SN
+      type: Table
+      visible: (method:taguchi)
+      clearWith: *clear
+      columns:
+        - name: item
+          title: Statistic
+          type: text
+        - name: sn
+          title: SN
+          type: number
+
+    - name: analysisSnAnova
+      title: ANOVA on SN
+      type: Table
+      visible: (method:taguchi && snModel)
+      clearWith: *clear
+      columns:
+        - name: term
+          title: Term
+          type: text
+        - name: ss
+          title: Sum of Squares
+          type: number
+        - name: df
+          title: df
+          type: integer
+        - name: ms
+          title: Mean Square
+          type: number
+        - name: F
+          title: F
+          type: number
+        - name: p
+          title: p
+          type: number
+          format: zto,pvalue
+        - name: contrib
+          title: Contribution %
+          type: number
+
+    - name: analysisHalfNormal
+      title: Half-Normal Plot
+      type: Image
+      width: 450
+      height: 400
+      renderFun: .plotHalfNormal
+      visible: (method:regression && halfNormal)
+      clearWith: *clear
+
+    - name: analysisPareto
+      title: Pareto Plot
+      type: Image
+      width: 450
+      height: 400
+      renderFun: .plotPareto
+      visible: (method:regression && pareto)
+      clearWith: *clear
+
+    - name: analysisMainEffects
+      title: Main Effects Plot
+      type: Image
+      width: 500
+      height: 400
+      renderFun: .plotMainEffects
+      visible: (method:regression && mainEffects)
+      clearWith: *clear
+
+    - name: analysisInteraction
+      title: Interaction Plot
+      type: Image
+      width: 450
+      height: 400
+      renderFun: .plotInteraction
+      visible: (method:regression && interaction)
+      clearWith: *clear
+
+    - name: analysisResiduals
+      title: Residual Plots
+      type: Image
+      width: 500
+      height: 400
+      renderFun: .plotResiduals
+      visible: (method:regression && residuals)
+      clearWith: *clear
+
+    - name: analysisContour
+      title: Contour Plot
+      type: Image
+      width: 450
+      height: 400
+      renderFun: .plotContour
+      visible: (method:regression && contour)
+      clearWith: *clear
+
+    - name: analysisPlotSN
+      title: SN Main Effects
+      type: Image
+      width: 500
+      height: 400
+      renderFun: .plotSN
+      visible: (method:taguchi && plotSN)
+      clearWith: *clear
+
+    - name: analysisPlotMeans
+      title: Means Main Effects
+      type: Image
+      width: 500
+      height: 400
+      renderFun: .plotMeans
+      visible: (method:taguchi && plotMeans)
+      clearWith: *clear
+
+    - name: analysisSnDeltaPlot
+      title: SN Factor Delta
+      type: Image
+      width: 450
+      height: 400
+      renderFun: .plotSnDelta
+      visible: (method:taguchi)
+      clearWith: *clear
+...

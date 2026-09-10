@@ -11,7 +11,7 @@ taguchiarraysClass <- if (requireNamespace('jmvcore', quietly = TRUE)) R6::R6Cla
             factors$name <- .doe_safe_names(factors$name)
             nlevels <- vapply(factors$levels, length, integer(1))
             array_id <- self$options$arrayId
-            reps <- .doe_int_opt(self$options$replicates)
+            reps <- .doe_int_opt(self$options$replicates, default = 2L, min = 2L)
             rand <- isTRUE(self$options$randomize)
             seed <- .doe_int_opt(self$options$seed, default = 1L, min = NA_integer_)
 
@@ -86,11 +86,6 @@ taguchiarraysClass <- if (requireNamespace('jmvcore', quietly = TRUE)) R6::R6Cla
                 ),
                 out, factor_df, response_df, seed
             )
-            .doe_maybe_evaluate_taguchi(
-                self, factor_df, response_df, factors$name, resp_info = resp_info
-            )
-        },
-        .plotSN = function(image, ...) .doe_plot_sn(image),
-        .plotMeans = function(image, ...) .doe_plot_means(image)
+        }
     )
 )

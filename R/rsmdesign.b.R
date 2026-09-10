@@ -78,16 +78,6 @@ rsmdesignClass <- if (requireNamespace('jmvcore', quietly = TRUE)) R6::R6Class(
                 actual_out, actual_df, resp_df, seed
             )
             .doe_fill_table(self$results$coded, coded_out)
-            .doe_maybe_evaluate_lm(
-                self, actual_df, resp_df, fac$name, self$options$analysisModel,
-                resp_info = resp_info
-            )
-        },
-        .plotHalfNormal = function(image, ...) .doe_plot_half_normal(image),
-        .plotPareto = function(image, ...) .doe_plot_pareto(image),
-        .plotMainEffects = function(image, ...) .doe_plot_main_effects(image),
-        .plotInteraction = function(image, ...) .doe_plot_interaction(image),
-        .plotResiduals = function(image, ...) .doe_plot_residuals(image),
-        .plotContour = function(image, ...) .doe_plot_contour(image)
+        }
     )
 )
